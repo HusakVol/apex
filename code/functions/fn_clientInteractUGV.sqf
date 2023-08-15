@@ -27,13 +27,14 @@ params [
 	['_type',-1]
 ];
 private _return = -1;
+_ugv_stretcherModel = 'a3\props_f_orange\humanitarian\camps\stretcher_01_f.p3d';
 if (_type isEqualTo 0) exitWith {
 	//comment 'Is eligible stomper for medical loading, return type BOOL';
 	_return = FALSE;
 	_return = (((attachedObjects _vehicle) select {
 		(
 			((!(isSimpleObject _x)) && ((toLowerANSI (typeOf _x)) in ['land_stretcher_01_f','land_stretcher_01_olive_f','land_stretcher_01_sand_f']) && (!(isObjectHidden _x))) ||
-			((isSimpleObject _x) && (((getModelInfo _x) # 1) isEqualTo 'a3\props_f_orange\humanitarian\camps\stretcher_01_f.p3d') && (!(isObjectHidden _x)))
+			((isSimpleObject _x) && (((getModelInfo _x) # 1) isEqualTo _ugv_stretcherModel) && (!(isObjectHidden _x)))
 		)
 	}) isNotEqualTo []);
 	_return;
@@ -43,7 +44,7 @@ if (_type isEqualTo 1) exitWith {
 	_nStretchers = count ((attachedObjects _vehicle) select {
 		(
 			((!(isSimpleObject _x)) && ((toLowerANSI (typeOf _x)) in ['land_stretcher_01_f','land_stretcher_01_olive_f','land_stretcher_01_sand_f'])) ||
-			((isSimpleObject _x) && (((getModelInfo _x) # 1) isEqualTo 'a3\props_f_orange\humanitarian\camps\stretcher_01_f.p3d'))
+			((isSimpleObject _x) && (((getModelInfo _x) # 1) isEqualTo _ugv_stretcherModel))
 		)
 	});
 	_nBodies = count ((attachedObjects _vehicle) select {
@@ -95,5 +96,25 @@ if (_type isEqualTo 5) exitWith {
 	if (_list isNotEqualTo []) then {
 		[_vehicle,3,(_list # 0)] call (missionNamespace getVariable 'QS_fnc_clientInteractUGV');
 	};
+};
+
+if (_type isEqualTo 6) exitWith {
+    //comment 'Hide stretchers'
+   {
+       if (getModelInfo (_x) # 1 isEqualTo _ugv_stretcherModel) then {
+           [71,_x,TRUE] remoteExecCall ['QS_fnc_remoteExec',2,FALSE];
+       };
+   } forEach (attachedObjects _vehicle);
+};
+if (_type isEqualTo 7) exitWith {
+    //comment 'Unhide stretchers on low altitude'
+    while {getPos _vehicle # 2 > 50} do {
+        sleep 5;
+    };
+    {
+        if (getModelInfo (_x) # 1 isEqualTo _ugv_stretcherModel) then {
+            [71,_x,FALSE] remoteExecCall ['QS_fnc_remoteExec',2,FALSE];
+        };
+    } forEach (attachedObjects _vehicle);
 };
 _return;
