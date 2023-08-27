@@ -38,4 +38,10 @@ if (!isNull _child) then {
 		[objNull,_child] remoteExec ['QS_fnc_eventCargoUnloaded',_child,FALSE];
 	};
 };
+if ((typeof _parent) in ['B_T_VTOL_01_vehicle_F', 'B_T_VTOL_01_vehicle_blue_F', 'B_T_VTOL_01_vehicle_olive_F']) then {
+    // comment 'Unhide stretchers on stomper on low altitude'
+    if ((typeOf _child) in ['B_UGV_01_F', 'B_T_UGV_01_olive_F']) then {
+        [_child, 7] spawn (missionNamespace getVariable 'QS_fnc_clientInteractUGV');
+    };
+};
 [_parent,TRUE,TRUE] call QS_fnc_updateCenterOfMass;

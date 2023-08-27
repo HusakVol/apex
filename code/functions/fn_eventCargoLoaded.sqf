@@ -46,4 +46,10 @@ if (!isNull _child) then {
 		[objNull,_child] remoteExec ['QS_fnc_eventCargoLoaded',_child,FALSE];
 	};
 };
+if (['B_T_VTOL_01_vehicle', (typeof _parent)] call BIS_fnc_inString) then {
+    // hide stretchers on stomper so they won't detach parachute when stomer is dropped
+    if ((typeOf _child) in ['B_UGV_01_F', 'B_T_UGV_01_olive_F']) then {
+        [_child, 6] call (missionNamespace getVariable 'QS_fnc_clientInteractUGV');
+    };
+};
 [_parent,TRUE,TRUE] call QS_fnc_updateCenterOfMass;
